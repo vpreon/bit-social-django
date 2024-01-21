@@ -11,6 +11,8 @@ SECRET_KEY = 'django-insecure-y=m)v)$ut5hb-x5uop=&hukbke=6&!uj3fmvz%ty_8c^9ds5#1
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS= ["htpp://localhost:3000"]
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

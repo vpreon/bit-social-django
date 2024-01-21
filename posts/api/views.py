@@ -1,10 +1,12 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from posts.api.serializers import PostSerializer, PostCommentSerializer, PostViewSerializer, PostReactSerializer
 from posts.models import Post, PostReact, PostComment, PostView
 
 
 class PostViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
@@ -14,7 +16,7 @@ class PostReactViewSet(viewsets.ModelViewSet):
     queryset = PostReact.objects.all()
 
     def get_queryset(self):
-        return self.queryset.filter(post=self.kwargs['post_pk'])
+        return self.queryset.filter(post=self.kwargs.get('post_pk'))
 
 
 class PostCommentViewSet(viewsets.ModelViewSet):
@@ -22,7 +24,7 @@ class PostCommentViewSet(viewsets.ModelViewSet):
     queryset = PostComment.objects.all()
 
     def get_queryset(self):
-        return self.queryset.filter(post=self.kwargs['post_pk'])
+        return self.queryset.filter(post=self.kwargs.get('post_pk'))
 
 
 class PostViewViewSet(viewsets.ModelViewSet):
@@ -30,4 +32,4 @@ class PostViewViewSet(viewsets.ModelViewSet):
     queryset = PostView.objects.all()
 
     def get_queryset(self):
-        return self.queryset.filter(post=self.kwargs['post_pk'])
+        return self.queryset.filter(post=self.kwargs.get('post_pk'))
