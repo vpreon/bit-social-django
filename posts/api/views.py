@@ -9,6 +9,11 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
+    
+    
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class PostReactViewSet(viewsets.ModelViewSet):
@@ -17,6 +22,7 @@ class PostReactViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(post=self.kwargs.get('post_pk'))
+    
 
 
 class PostCommentViewSet(viewsets.ModelViewSet):

@@ -6,7 +6,7 @@ from posts.models import Post, PostComment, PostView, PostReact
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['text']
+        fields = ["id", 'text', 'created', 'updated']
 
 
 class PostReactSerializer(serializers.ModelSerializer):
