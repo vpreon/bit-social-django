@@ -12,7 +12,8 @@ class PostSerializer(serializers.ModelSerializer):
 class PostReactSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostReact
-        fields = ['id', 'user', 'post']
+        fields = ['id', 'user', 'post', 'react']
+        read_only_fields = ['post', "user"]
 
 
 class PostCommentSerializer(serializers.ModelSerializer):

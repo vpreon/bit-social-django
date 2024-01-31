@@ -18,6 +18,9 @@ class PostReact(AppBaseModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_react')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     react = models.CharField(max_length=50, choices=Reacts)
+    
+    class Meta:
+        unique_together = ("post", "user")
 
 
 class PostComment(AppBaseModel):
