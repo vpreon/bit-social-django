@@ -4,10 +4,19 @@ from posts.models import Post, PostComment, PostView, PostReact
 
 
 class PostSerializer(serializers.ModelSerializer):
+    reacts = serializers.SerializerMethodField()
+    reacted = serializers.SerializerMethodField()
+
     class Meta:
         model = Post
-        fields = ["id", 'text', 'created', 'updated']
+        fields = ["id", 'text', 'reacts', 'reacted', 'created', 'updated']
 
+    def get_reacts(self, obj):
+        return obj.reacts
+
+    def get_reacted(self, obj):
+        return obj.reacted
+            
 
 class PostReactSerializer(serializers.ModelSerializer):
     class Meta:

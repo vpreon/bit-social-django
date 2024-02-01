@@ -1,3 +1,5 @@
+from django.db.models import Count, Exists, OuterRef
+
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -13,6 +15,11 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return self.queryset.annotate(
+            reacts=Count('post_react'), 
+            reacted=Exists(PostReact.objects.filter(user=self.request.user, post=OuterRef('pk'))))
 
 
 class PostReactViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
