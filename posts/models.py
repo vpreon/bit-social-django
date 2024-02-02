@@ -24,7 +24,7 @@ class PostReact(AppBaseModel):
 
 
 class PostComment(AppBaseModel):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comment')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.CharField(max_length=250)
 

@@ -17,8 +17,8 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        return self.queryset.annotate(
-            reacts=Count('post_react'), 
+        return self.queryset.prefetch_related('comments').annotate(
+            reacts=Count('post_react'),
             reacted=Exists(PostReact.objects.filter(user=self.request.user, post=OuterRef('pk'))))
 
 
@@ -53,6 +53,10 @@ class PostCommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(post=self.kwargs.get('post_pk'))
+    
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, post_id=self.kwargs.get('post_pk'))
 
 
 class PostViewViewSet(viewsets.ModelViewSet):
