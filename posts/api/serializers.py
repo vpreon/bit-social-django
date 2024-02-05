@@ -14,10 +14,15 @@ class PostSerializer(serializers.ModelSerializer):
                   'comments', 'created', 'updated']
 
     def get_reacts(self, obj):
-        return obj.reacts
+        if hasattr(obj, 'reacts'):
+            return obj.reacts
+        else:
+            return []
 
     def get_reacted(self, obj):
-        return obj.reacted
+        if hasattr(obj, 'reacted'):
+            return obj.reacted
+        return 0
 
     def get_comments(self, obj):
         serialized_comment = PostCommentSerializer(obj.comments, many=True)
