@@ -3,7 +3,7 @@ from rest_framework import serializers
 from posts.models import Post, PostComment, PostView, PostReact
 
 
-class PostSerializer(serializers.ModelSerializer):
+class BasePostSerializer(serializers.ModelSerializer):
     reacts = serializers.SerializerMethodField()
     reacted = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
@@ -11,7 +11,9 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ["id", 'text', 'reacts', 'reacted',
-                  'comments', 'created', 'updated']
+                  'comments', 'post', 'created', 'updated']
+        
+       
 
     def get_reacts(self, obj):
         if hasattr(obj, 'reacts'):
@@ -27,7 +29,35 @@ class PostSerializer(serializers.ModelSerializer):
     def get_comments(self, obj):
         serialized_comment = PostCommentSerializer(obj.comments, many=True)
         return serialized_comment.data
-        return 1
+
+
+class ShareSerializer(BasePostSerializer):
+    pass
+
+
+class PostSerializer(BasePostSerializer):
+    reacts = serializers.SerializerMethodField()
+    reacted = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
+    share = ShareSerializer(read_only=True, source='post')
+    
+    class Meta:
+        model = Post
+        fields = ["id", 'text', 'reacts', 'reacted',
+                  'comments', 'post', 'share','created', 'updated']
+        
+        extra_kwargs = {
+            "post": {"write_only": True}
+        }
+
+    def validate(self, data):
+        post = data.get('post')
+        text = data.get('text')
+
+        if not text and not post:
+            raise serializers.ValidationError({'text': "Text is required."})
+
+        return data
 
 
 class PostReactSerializer(serializers.ModelSerializer):

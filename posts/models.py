@@ -5,7 +5,7 @@ from core.models import AppBaseModel
 
 
 class Post(AppBaseModel):
-    text = models.CharField(max_length=500)
+    text = models.CharField(max_length=500, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey('self', on_delete=models.CASCADE, related_name='post_share', blank=True, null=True)
 
