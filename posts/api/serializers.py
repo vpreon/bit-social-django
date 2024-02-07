@@ -53,6 +53,8 @@ class PostSerializer(BasePostSerializer):
     def validate(self, data):
         post = data.get('post')
         text = data.get('text')
+        
+        print("text", text, post)
 
         if not text and not post:
             raise serializers.ValidationError({'text': "Text is required."})
