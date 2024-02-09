@@ -4,8 +4,8 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from posts.api.serializers import PostSerializer, PostCommentSerializer, PostViewSerializer, PostReactSerializer
-from posts.models import Post, PostReact, PostComment, PostView
+from posts.api.serializers import MediaSerializer, PostSerializer, PostCommentSerializer, PostViewSerializer, PostReactSerializer
+from posts.models import Media, Post, PostReact, PostComment, PostView
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -65,3 +65,20 @@ class PostViewViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(post=self.kwargs.get('post_pk'))
+
+
+class MediaViewSet(viewsets.ModelViewSet):
+    serializer_class = MediaSerializer
+    queryset = Media.objects.all()
+    
+    
+    def get_queryset(self):
+        return self.queryset.filter(post=self.kwargs.get('post_pk'))
+    
+    def perform_create(self, serializer):
+        serializer.save(post_id=self.kwargs.get('post_pk'))
+
+
+    
+    
+    

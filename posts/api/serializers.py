@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from posts.models import Post, PostComment, PostView, PostReact
+from posts.models import Media, Post, PostComment, PostView, PostReact
 
 
 class BasePostSerializer(serializers.ModelSerializer):
@@ -80,3 +80,9 @@ class PostViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostView
         fields = ['id', 'user', 'post']
+
+
+class MediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  Media
+        fields = ['id', 'image']

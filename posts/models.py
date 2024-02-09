@@ -10,6 +10,8 @@ class Post(AppBaseModel):
     post = models.ForeignKey('self', on_delete=models.CASCADE, related_name='post_share', blank=True, null=True)
 
 
+
+
 class PostReact(AppBaseModel):
     class Reacts(models.TextChoices):
         like = "LIKE"
@@ -32,3 +34,7 @@ class PostComment(AppBaseModel):
 class PostView(AppBaseModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_view')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Media(AppBaseModel):
+    image = models.ImageField()
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='media')
