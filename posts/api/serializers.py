@@ -3,17 +3,22 @@ from rest_framework import serializers
 from posts.models import Media, Post, PostComment, PostView, PostReact
 
 
+class MediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Media
+        fields = ['id', 'image']
+
+
 class BasePostSerializer(serializers.ModelSerializer):
     reacts = serializers.SerializerMethodField()
     reacted = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
+    medias = MediaSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
         fields = ["id", 'text', 'reacts', 'reacted',
-                  'comments', 'post', 'created', 'updated']
-        
-       
+                  'comments', 'post', 'medias', 'created', 'updated']
 
     def get_reacts(self, obj):
         if hasattr(obj, 'reacts'):
@@ -36,16 +41,13 @@ class ShareSerializer(BasePostSerializer):
 
 
 class PostSerializer(BasePostSerializer):
-    reacts = serializers.SerializerMethodField()
-    reacted = serializers.SerializerMethodField()
-    comments = serializers.SerializerMethodField()
     share = ShareSerializer(read_only=True, source='post')
-    
+
     class Meta:
         model = Post
-        fields = ["id", 'text', 'reacts', 'reacted',
-                  'comments', 'post', 'share','created', 'updated']
-        
+        fields = BasePostSerializer.Meta.fields + \
+            ['share', 'created', 'updated']
+
         extra_kwargs = {
             "post": {"write_only": True}
         }
@@ -53,8 +55,6 @@ class PostSerializer(BasePostSerializer):
     def validate(self, data):
         post = data.get('post')
         text = data.get('text')
-        
-        print("text", text, post)
 
         if not text and not post:
             raise serializers.ValidationError({'text': "Text is required."})
@@ -80,9 +80,3 @@ class PostViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostView
         fields = ['id', 'user', 'post']
-
-
-class MediaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model =  Media
-        fields = ['id', 'image']

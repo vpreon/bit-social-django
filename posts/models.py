@@ -37,4 +37,4 @@ class PostView(AppBaseModel):
 
 class Media(AppBaseModel):
     image = models.ImageField()
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='media')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='medias')
