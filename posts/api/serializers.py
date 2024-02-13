@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from accounts.api.serializers import UserSerializer
 
 from posts.models import Media, Post, PostComment, PostView, PostReact
 
@@ -14,11 +15,12 @@ class BasePostSerializer(serializers.ModelSerializer):
     reacted = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     medias = MediaSerializer(many=True, read_only=True)
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Post
         fields = ["id", 'text', 'reacts', 'reacted',
-                  'comments', 'post', 'medias', 'created', 'updated']
+                  'comments', 'post', 'medias', 'user', 'created', 'updated']
 
     def get_reacts(self, obj):
         if hasattr(obj, 'reacts'):
@@ -42,11 +44,12 @@ class ShareSerializer(BasePostSerializer):
 
 class PostSerializer(BasePostSerializer):
     share = ShareSerializer(read_only=True, source='post')
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Post
         fields = BasePostSerializer.Meta.fields + \
-            ['share', 'created', 'updated']
+            ['share', 'user', 'created', 'updated']
 
         extra_kwargs = {
             "post": {"write_only": True}

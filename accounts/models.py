@@ -7,6 +7,7 @@ from core.models import AppBaseModel
 
 class User(AbstractUser, AppBaseModel):
     email = models.EmailField(unique=True)
+    profile_image = models.ImageField(blank=True, null=True)
 
     username = None
     USERNAME_FIELD = 'email'
