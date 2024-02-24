@@ -45,6 +45,7 @@ class ShareSerializer(BasePostSerializer):
 class PostSerializer(BasePostSerializer):
     share = ShareSerializer(read_only=True, source='post')
     user = UserSerializer(read_only=True)
+    
 
     class Meta:
         model = Post
